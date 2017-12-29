@@ -2,6 +2,8 @@
 #include<algorithm>
 #include"Card.h"
 #include<iostream>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 class Deck
@@ -43,12 +45,12 @@ public:
 
 	void shuffle() {
 
-		random_shuffle(&_cards[0], &_cards[52]);
+		random_shuffle(begin(_cards), end(_cards));
 	}
-
+	
 	Card &deal() {
 		
-		return _cards[_noOfCards--];
+		return _cards[--_noOfCards];
 	}
 
 	void resetNoOfCards() {

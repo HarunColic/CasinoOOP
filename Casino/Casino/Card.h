@@ -25,9 +25,10 @@ public:
 
 	Card(Card &&C) {
 
-
+		_suit = C._suit;
+		_rank = C._rank;
 	}
-
+	
 	~Card()
 	{
 	}

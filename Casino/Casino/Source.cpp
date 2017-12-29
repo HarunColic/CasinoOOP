@@ -12,7 +12,10 @@ char * generatePlayer() {
 	cout << "Please insert your name" << endl;
 	cin.getline(name, 50);
 
-	return name;
+	char *_name = new char[strlen(name) + 1];
+	strcpy_s(_name, strlen(name) + 1, name);
+	
+	return _name;
 }
 
 int main() {
@@ -24,26 +27,33 @@ int main() {
 	int input;
 
 	do {
+
+		system("cls");
+
 		cout << "1. Poker" << endl;
 		cout << "2. Black Jack" << endl;
-		cout << "3. Exit" << endl;
+		cout << "3. Shuffle cards" << endl;
+		cout << "4. Exit" << endl;
 
 		do
 		{
 			cin >> input;
 
-		} while (input > 3 || input < 1);
+		} while (input > 4 || input < 1);
 
 		if (input == 1) {
 
 			int choice;
 
+			player.resetNoOfCards();
+
+			for (int i = 0; i < 5; i++) {
+
+				player.handOneCard(deck.deal(), input);
+			}
+
 			do
 			{
-				for (int i = 0; i < 5; i++) {
-					player.handOneCard(deck.deal(),input);
-				}
-
 				cout << "1. Check Hand" << endl;
 				cout << "2. Exit" << endl;
 
@@ -60,7 +70,7 @@ int main() {
 
 			} while (choice == 1);
 		}
-		else {
+		else if(input == 2) {
 
 			int choice;
 
@@ -69,23 +79,29 @@ int main() {
 				player.handOneCard(deck.deal(), input);
 			}
 
-			cout << "Hand total: " << player.getHandSum() << endl;
+			cout << player.getName() << "'s Hand Sum: " << player.getHandSum() << endl;
 
 			do
 			{
 
 				if (player.getHandSum() == 21) {
 
-					cout << "Hand Sum: " << player.getHandSum() << endl;
+					cout <<player.getName()<< "'s Hand Sum: " << player.getHandSum() << endl;
 					cout << "You win" << endl;
 					cout << endl;
+					player.resetHandSum();
+					player.resetNoOfCards();
+					system("pause");
 					break;
 				}
 				else if (player.getHandSum() > 21) {
 
-					cout << "Hand Sum: " << player.getHandSum() << endl;
+					cout << player.getName() << "'s Hand Sum: " << player.getHandSum() << endl;
 					cout << "Bust!" << endl;
 					cout << endl;
+					player.resetHandSum();
+					player.resetNoOfCards();
+					system("pause");
 					break;
 				}
 
@@ -102,33 +118,57 @@ int main() {
 				if (choice == 1) {
 
 					player.handOneCard(deck.deal(), input);
+					cout << player.getName() << "'s Hand Sum: " << player.getHandSum() << endl;
 				}
 				else if (choice == 2) {
 
-					if (player.getDealerHandSum(deck) >= player.getHandSum() && player.getDealerHandSum(deck) <= 21) {
+					int dealerHand = player.getDealerHandSum(deck);
 
-						cout << "Dealer hand sum: " << player.getDealerHandSum(deck) << endl;
+					if (dealerHand < 21 && dealerHand >= player.getHandSum()) {
+
+						cout << "Dealer hand sum: " << dealerHand << endl;
 						cout << "The dealer wins" << endl;
 						cout << endl;
+						player.resetHandSum();
+						player.resetNoOfCards();
+						system("pause");
 						break;
 					}
 					else {
 						
-						cout << "Dealer hand sum: " << player.getDealerHandSum(deck) << endl;
+						cout << "Dealer hand sum: " << dealerHand << endl;
 						cout << "You win!" << endl;
 						cout << endl;
+						player.resetHandSum();
+						player.resetNoOfCards();
+						system("pause");
 						break;
 					}
 				}
-				else
+				else if(choice == 3){
+					
+					player.resetHandSum();
+					player.resetNoOfCards();
 					break;
+				}
 
 		} while (true);
 
+		player.resetHandSum();
+		player.resetNoOfCards();
 		deck.resetNoOfCards();
 		deck.shuffle();
+
 	}
-} while (input == 1 || input == 2);
+		else if (input == 3) {
+
+			for (int i = 0; i < strlen(player.getName()); i++) {
+				deck.shuffle();
+			}
+			player.resetNoOfCards();
+		}
+
+} while (input != 4);
 
 return 0;
 }

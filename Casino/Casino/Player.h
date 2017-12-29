@@ -7,7 +7,7 @@ using namespace std;
 class Player
 {
 	char *_name;
-	Card _cards[5];
+	Card _cards[10];
 	int _noOfCards;
 	int _handSum; //only used in Black Jack
 
@@ -28,6 +28,10 @@ public:
 		_noOfCards = 0;
 
 		_handSum = 0;
+
+		delete[] name;
+		name = nullptr;
+
 	}
 
 	Player(Player &P) {
@@ -61,17 +65,12 @@ public:
 	void handOneCard(Card _card, int choice) {
 
 		if (choice == 1) {
-			if (_noOfCards == 5) {
-
-				cout << "Failed! Player has the maximum number of cards" << endl;
-				return;
-			}
-
+			
 			_cards[_noOfCards] = _card;
 			cout << "Card handed" << endl;
 			_noOfCards++;
 		}
-		else {
+		else if(choice == 2){
 			
 			_cards[_noOfCards] = _card;
 			cout << "Card handed" << endl;
@@ -94,30 +93,33 @@ public:
 		}
 
 		if (choice == 1) {
-			int counter = 0;
 
 			for (int i = 0; i < _noOfCards - 1; i++) {
-				for (int j = 1; j < _noOfCards; j++) {
+				int counter = 0;
+
+				for (int j = i+1; j < _noOfCards; j++) {
 
 					if (_cards[i].getRank() == _cards[j].getRank())
 						counter++;
 				}
 
+				counter++;
+
 				if (counter == 2) {
 
-					cout << "The player has a pair of " << RankChar[_cards[i].getRank()] << endl;
+					cout<<this->_name << " has a pair of " << RankChar[_cards[i].getRank()] << endl;
 				}
 				else if (counter == 3) {
 
-					cout << "The player has trip " << RankChar[_cards[i].getRank()] << endl;
+					cout << this->_name << " has trip " << RankChar[_cards[i].getRank()] << endl;
 				}
 				else if (counter == 4) {
 
-					cout << "The player has quad " << RankChar[_cards[i].getRank()] << endl;
+					cout << this->_name << " has quad " << RankChar[_cards[i].getRank()] << endl;
 				}
 			}
 		}
-		else {
+		else if (choice == 2){
 
 			cout << "Total: " << _handSum << endl;
 		}
@@ -143,5 +145,20 @@ public:
 		} while (sum<17);
 
 		return sum;
+	}
+
+	void resetHandSum() {
+
+		_handSum = 0;
+	}
+
+	void resetNoOfCards() {
+
+		_noOfCards = 0;
+	}
+
+	char *getName() {
+
+		return _name;
 	}
 };
